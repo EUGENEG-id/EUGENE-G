@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<title>EUGENE-G</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+margin:0;
+}
+
+/* HEADER */
+
+.header{
+background:#2f6f45;
+color:white;
+text-align:center;
+padding:60px 20px;
+}
+
+.header h1{
+font-size:60px;
+margin:0;
+letter-spacing:4px;
+}
+
+.header p{
+font-size:22px;
+margin-top:10px;
+}
+
+/* CONTAINER */
+
+.container{
+max-width:900px;
+margin:auto;
+background:white;
+padding:40px;
+margin-top:30px;
+border-radius:10px;
+}
+
+/* INPUT */
+
+input,select{
+width:100%;
+padding:10px;
+margin-bottom:12px;
+}
+
+/* GRID */
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+/* BUTTON */
+
+button{
+padding:14px;
+background:#2a6b47;
+color:white;
+border:none;
+cursor:pointer;
+border-radius:6px;
+width:100%;
+font-size:16px;
+}
+
+/* RESULT */
+
+.result{
+margin-top:25px;
+padding:20px;
+background:#e8f5e9;
+border-radius:10px;
+}
+
+.card{
+background:white;
+border:1px solid #ddd;
+padding:15px;
+border-radius:8px;
+margin-top:10px;
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th,td{
+border:1px solid #ddd;
+padding:10px;
+text-align:center;
+}
+
+th{
+background:#2a6b47;
+color:white;
+}
+
+tr:nth-child(even){
+background:#f2f2f2;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>EUGENE-G</h1>
+<p>Euclidean Guided Nutritional Epigenomics</p>
+
+</div>
+
+<div class="container">
+
+<h2>Input Data Morfometri Kambing</h2>
+
+<input type="text" id="id" placeholder="ID Kambing">
+
+<select id="jenis_kelamin">
+<option>Jantan</option>
+<option>Betina</option>
+</select>
+
+<input type="text" id="umur" placeholder="Umur kambing">
+<input type="text" id="warna" placeholder="Warna bulu">
+
+<h3>Data Morfometri (cm)</h3>
+
+<div class="grid">
+
+<input type="number" id="tinggi" placeholder="Tinggi badan">
+<input type="number" id="lebar" placeholder="Lebar badan">
+
+<input type="number" id="kaki" placeholder="Panjang kaki">
+<input type="number" id="dada" placeholder="Lebar dada">
+
+<input type="number" id="kepala" placeholder="Panjang kepala">
+<input type="number" id="tanduk" placeholder="Panjang tanduk">
+
+<input type="number" id="bulu" placeholder="Panjang bulu">
+
+</div>
+
+<br>
+
+<button onclick="analisis()">Jalankan Analisis</button>
+
+<div id="hasil"></div>
+
+</div>
+
+<script>
+
+/* DATASET REFERENSI */
+
+let dataset = {
+
+G1:[85,65,20,15,18,7,18],
+G2:[62,57,16,13,15,8,12],
+G3:[73,60,18,14,17,6,15],
+G4:[64,58,17,13,16,6,13],
+G5:[61,55,16,12,15,4,12],
+G6:[75,61,19,14,18,5,14],
+G7:[63,56,16,13,15,3,13]
+
+}
+
+/* EUCLIDEAN DISTANCE */
+
+function euclidean(a,b){
+
+let sum = 0
+
+for(let i=0;i<a.length;i++){
+
+sum += Math.pow(a[i]-b[i],2)
+
+}
+
+return Math.sqrt(sum)
+
+}
+
+/* CARI KAMBING PALING MIRIP */
+
+function cariMirip(data){
+
+let palingDekat=""
+let jarakTerkecil=Infinity
+
+for(let kambing in dataset){
+
+let jarak = euclidean(data,dataset[kambing])
+
+if(jarak < jarakTerkecil){
+
+jarakTerkecil = jarak
+palingDekat = kambing
+
+}
+
+}
+
+return {id:palingDekat,jarak:jarakTerkecil}
+
+}
+
+/* ANALISIS */
+
+function analisis(){
+
+let tinggi=parseFloat(document.getElementById("tinggi").value)
+let lebar=parseFloat(document.getElementById("lebar").value)
+let kaki=parseFloat(document.getElementById("kaki").value)
+let dada=parseFloat(document.getElementById("dada").value)
+let kepala=parseFloat(document.getElementById("kepala").value)
+let tanduk=parseFloat(document.getElementById("tanduk").value)
+let bulu=parseFloat(document.getElementById("bulu").value)
+
+let data=[tinggi,lebar,kaki,dada,kepala,tanduk,bulu]
+
+/* REFERENSI KLASTER */
+
+let clusterA=[70,55,20,16,18,7,14]
+let clusterB=[80,65,25,20,21,10,18]
+let clusterC=[60,50,17,13,16,5,12]
+
+let dA=euclidean(data,clusterA)
+let dB=euclidean(data,clusterB)
+let dC=euclidean(data,clusterC)
+
+let cluster="A"
+let jarak=dA
+
+if(dB<jarak){
+cluster="B"
+jarak=dB
+}
+
+if(dC<jarak){
+cluster="C"
+jarak=dC
+}
+
+/* SARAN KAWIN */
+
+let saran=""
+
+if(cluster=="A"){
+saran="Disarankan dikawinkan dengan kambing klaster B untuk meningkatkan ukuran tubuh."
+}
+
+if(cluster=="B"){
+saran="Disarankan dikawinkan dengan kambing klaster A untuk menjaga keseimbangan morfometri."
+}
+
+if(cluster=="C"){
+saran="Disarankan dikawinkan dengan kambing klaster A atau B untuk memperbaiki ukuran tubuh."
+}
+
+/* KAMBING PALING MIRIP */
+
+let mirip=cariMirip(data)
+
+let hasil=document.getElementById("hasil")
+
+hasil.innerHTML=
+
+"<div class='result'>"+
+
+"<h3>Ringkasan Analisis</h3>"+
+
+"<div class='card'><b>Dataset Numerik:</b><br>"+data+"</div>"+
+
+"<div class='card'><b>Klaster:</b> "+cluster+"</div>"+
+
+"<div class='card'><b>Jarak Euclidean:</b> "+jarak.toFixed(2)+"</div>"+
+
+"<div class='card'><b>Paling Mirip Dengan:</b> "+mirip.id+
+" (jarak "+mirip.jarak.toFixed(2)+")</div>"+
+
+"<div class='card'><b>Saran Kawin:</b> "+saran+"</div>"+
+
+"<h3>Referensi Klaster Morfometri</h3>"+
+
+"<table>"+
+
+"<tr>"+
+"<th>Klaster</th>"+
+"<th>Kategori</th>"+
+"<th>Tinggi</th>"+
+"<th>Lebar</th>"+
+"<th>Kaki</th>"+
+"<th>Dada</th>"+
+"<th>Kepala</th>"+
+"<th>Tanduk</th>"+
+"<th>Bulu</th>"+
+"</tr>"+
+
+"<tr>"+
+"<td>A</td>"+
+"<td>Sedang</td>"+
+"<td>70</td>"+
+"<td>55</td>"+
+"<td>20</td>"+
+"<td>16</td>"+
+"<td>18</td>"+
+"<td>7</td>"+
+"<td>14</td>"+
+"</tr>"+
+
+"<tr>"+
+"<td>B</td>"+
+"<td>Besar</td>"+
+"<td>80</td>"+
+"<td>65</td>"+
+"<td>25</td>"+
+"<td>20</td>"+
+"<td>21</td>"+
+"<td>10</td>"+
+"<td>18</td>"+
+"</tr>"+
+
+"<tr>"+
+"<td>C</td>"+
+"<td>Kecil</td>"+
+"<td>60</td>"+
+"<td>50</td>"+
+"<td>17</td>"+
+"<td>13</td>"+
+"<td>16</td>"+
+"<td>5</td>"+
+"<td>12</td>"+
+"</tr>"+
+
+"</table>"+
+
+"</div>"
+
+}
+
+</script>
+
+</body>
+</html>
